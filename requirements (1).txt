@@ -1,0 +1,13 @@
+# requirements.txt para o projeto Financeiro-Inteligente-v1.0
+# Adicione aqui as dependências do seu projeto Python.
+# Exemplo de dependências comuns. Ajuste conforme seu código utiliza.
+
+flask
+pandas
+numpy
+sqlalchemy
+matplotlib
+requests
+
+# Se seu projeto usa outras bibliotecas, adicione-as abaixo:
+# ex: openpyxl
