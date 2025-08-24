@@ -8,3 +8,4 @@ psycopg2-binary
 gunicorn
 pytz
 flask_wtf
+reportlab
