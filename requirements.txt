@@ -8,6 +8,7 @@ numpy
 sqlalchemy
 matplotlib
 requests
+gunicorn
 
 # Se seu projeto usa outras bibliotecas, adicione-as abaixo:
 # ex: openpyxl
