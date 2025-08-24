@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - {{ plan_name }} - Financeiro Inteligente{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Finalizar Assinatura</h1>
+        <p class="text-gray-600">Você está quase lá! Complete sua assinatura do {{ plan_name }}</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+                <h3 class="text-lg font-semibold mb-4">Resumo do Pedido</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">{{ plan_name }}</span>
+                        <span class="font-bold">R$ {{ plan_price }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-sm text-gray-600">
+                        <span>Período</span>
+                        <span>Mensal</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-sm text-green-600">
+                        <span>Desconto (1º mês)</span>
+                        <span>-R$ {{ plan_price }}</span>
+                    </div>
+                    
+                    <hr class="border-gray-200">
+                    
+                    <div class="flex items-center justify-between font-bold text-lg">
+                        <span>Total hoje</span>
+                        <span class="text-success">R$ 0,00</span>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500">
+                        Após o período gratuito, será cobrado R$ {{ plan_price }}/mês
+                    </div>
+                </div>
+                
+                <!-- Plan Features -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h4 class="font-medium mb-3">Incluído no seu plano:</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        {% if plan_id == 'mei' %}
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Até 100 transações/mês</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Relatórios básicos</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Suporte por email</li>
+                        {% elif plan_id == 'professional' %}
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Até 500 transações/mês</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Relatórios avançados</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Automações inteligentes</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Suporte prioritário</li>
+                        {% else %}
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Transações ilimitadas</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Multiusuário</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Acesso para contador</li>
+                            <li class="flex items-center"><i class="bi bi-check text-green-500 mr-2"></i>Suporte 24/7</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-6">Informações de Pagamento</h3>
+                
+                <!-- Mock Mercado Pago Integration -->
+                <form method="POST" action="{{ url_for('subscription.process_payment') }}">
+                    <input type="hidden" name="plan_id" value="{{ plan_id }}">
+                    
+                    <!-- Payment Method Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Forma de Pagamento</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="border-2 border-primary bg-primary bg-opacity-5 rounded-lg p-4 cursor-pointer">
+                                <div class="flex items-center">
+                                    <input type="radio" name="payment_method" value="credit_card" checked class="mr-3">
+                                    <div>
+                                        <div class="font-medium text-primary">Cartão de Crédito</div>
+                                        <div class="text-sm text-gray-500">Visa, Mastercard, Elo</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-gray-300">
+                                <div class="flex items-center">
+                                    <input type="radio" name="payment_method" value="pix" class="mr-3">
+                                    <div>
+                                        <div class="font-medium">PIX</div>
+                                        <div class="text-sm text-gray-500">Pagamento instantâneo</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Form -->
+                    <div id="credit-card-form">
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nome no Cartão</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary" placeholder="João Silva">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary" placeholder="000.000.000-00">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Número do Cartão</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary" placeholder="0000 0000 0000 0000">
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Validade</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary" placeholder="MM/AA">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary" placeholder="000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PIX Information (Initially Hidden) -->
+                    <div id="pix-form" class="hidden">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-center mb-2">
+                                <i class="bi bi-info-circle text-blue-600 mr-2"></i>
+                                <span class="font-medium text-blue-900">Pagamento via PIX</span>
+                            </div>
+                            <p class="text-sm text-blue-700">
+                                Após confirmar, você receberá um QR Code para pagamento instantâneo via PIX.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="mb-6">
+                        <div class="flex items-start">
+                            <input type="checkbox" required class="mt-1 mr-3 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <label class="text-sm text-gray-600">
+                                Eu concordo com os 
+                                <a href="#" class="text-primary hover:text-primary-dark">Termos de Serviço</a> 
+                                e 
+                                <a href="#" class="text-primary hover:text-primary-dark">Política de Privacidade</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-4">
+                        <a href="{{ url_for('subscription.plans') }}" class="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-semibold text-center hover:bg-gray-300 transition-colors">
+                            Voltar
+                        </a>
+                        <button type="submit" class="flex-1 bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-dark transition-colors">
+                            <i class="bi bi-shield-check mr-2"></i>
+                            Confirmar Assinatura
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="bi bi-shield-check text-green-600 mr-3"></i>
+                    <div>
+                        <h4 class="font-medium text-green-900">Pagamento 100% Seguro</h4>
+                        <p class="text-sm text-green-700">Seus dados são protegidos por criptografia SSL e processados pelo Mercado Pago</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Money Back Guarantee -->
+            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="bi bi-arrow-clockwise text-blue-600 mr-3"></i>
+                    <div>
+                        <h4 class="font-medium text-blue-900">Garantia de 30 dias</h4>
+                        <p class="text-sm text-blue-700">Se não ficar satisfeito, devolvemos 100% do seu dinheiro</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Toggle payment forms
+document.addEventListener('DOMContentLoaded', function() {
+    const creditCardRadio = document.querySelector('input[value="credit_card"]');
+    const pixRadio = document.querySelector('input[value="pix"]');
+    const creditCardForm = document.getElementById('credit-card-form');
+    const pixForm = document.getElementById('pix-form');
+    
+    function togglePaymentForms() {
+        if (creditCardRadio.checked) {
+            creditCardForm.style.display = 'block';
+            pixForm.style.display = 'none';
+        } else {
+            creditCardForm.style.display = 'none';
+            pixForm.style.display = 'block';
+        }
+    }
+    
+    creditCardRadio.addEventListener('change', togglePaymentForms);
+    pixRadio.addEventListener('change', togglePaymentForms);
+    
+    // Initial state
+    togglePaymentForms();
+});
+</script>
+{% endblock %}

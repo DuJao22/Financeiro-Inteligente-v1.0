@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro - Financeiro Inteligente{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <div class="flex justify-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                    <i class="bi bi-calculator text-white text-2xl"></i>
+                </div>
+            </div>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                Crie sua conta grátis
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                7 dias de teste grátis • Sem cartão de crédito
+            </p>
+        </div>
+        
+        <form class="mt-8 space-y-6" method="POST">
+            {{ form.hidden_tag() }}
+            
+            <div class="space-y-4">
+                <div>
+                    {{ form.full_name.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.full_name(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Seu nome completo") }}
+                    {% if form.full_name.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.username.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.username(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="nome_usuario") }}
+                    {% if form.username.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.username.errors[0] }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.email.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.email(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="seu@email.com") }}
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.email.errors[0] }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.phone.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.phone(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="(11) 99999-9999") }}
+                    {% if form.phone.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.phone.errors[0] }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.password(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Mínimo 6 caracteres") }}
+                    {% if form.password.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.password.errors[0] }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.password2.label(class="block text-sm font-medium text-gray-700") }}
+                    {{ form.password2(class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Confirme sua senha") }}
+                    {% if form.password2.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.password2.errors[0] }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                {{ form.submit(class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary") }}
+            </div>
+            
+            <div class="text-center">
+                <p class="text-xs text-gray-500">
+                    Ao criar uma conta, você concorda com nossos
+                    <a href="#" class="text-primary hover:text-primary-dark">Termos de Uso</a>
+                    e <a href="#" class="text-primary hover:text-primary-dark">Política de Privacidade</a>
+                </p>
+                
+                <p class="mt-4 text-sm text-gray-600">
+                    Já tem uma conta?
+                    <a href="{{ url_for('auth.login') }}" class="font-medium text-primary hover:text-primary-dark">
+                        Faça login
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

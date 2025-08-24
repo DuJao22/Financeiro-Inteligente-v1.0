@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Financeiro Inteligente by João Layon - Gestão Financeira para Autônomos e Pequenos Negócios{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative overflow-hidden bg-gradient-to-r from-primary to-secondary">
+    <div class="max-w-7xl mx-auto px-4 py-24">
+        <div class="text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                <span class="block">Financeiro Inteligente</span>
+                <span class="block text-2xl md:text-3xl font-normal opacity-90">by João Layon</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">
+                A solução completa de gestão financeira para autônomos e pequenos negócios
+            </p>
+            <div class="space-x-4">
+                <a href="{{ url_for('auth.register') }}" class="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Teste Grátis por 7 Dias
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors">
+                    Já tenho conta
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Elements -->
+    <div class="absolute top-20 left-10 opacity-20">
+        <div class="w-20 h-20 bg-white rounded-full animate-pulse"></div>
+    </div>
+    <div class="absolute bottom-20 right-10 opacity-20">
+        <div class="w-16 h-16 bg-white rounded-lg rotate-45 animate-bounce"></div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                Por que escolher o Financeiro Inteligente?
+            </h2>
+            <p class="text-xl text-gray-600">
+                Tudo que você precisa para controlar suas finanças em um só lugar
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-16 h-16 bg-gradient-to-r from-success to-primary rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <i class="bi bi-graph-up text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Dashboard Inteligente</h3>
+                <p class="text-gray-600">
+                    Visualize suas finanças com gráficos interativos e indicadores em tempo real
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <i class="bi bi-calculator text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Controle Total</h3>
+                <p class="text-gray-600">
+                    Gerencie entradas, saídas, contas a pagar e receber de forma simples
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="text-center p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                <div class="w-16 h-16 bg-gradient-to-r from-secondary to-warning rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <i class="bi bi-file-earmark-text text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Relatórios Avançados</h3>
+                <p class="text-gray-600">
+                    Relatórios detalhados para tomada de decisões inteligentes
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Benefits Section -->
+<div class="py-20 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">
+                    Benefícios que fazem a diferença
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-check text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">Teste Grátis de 7 Dias</h3>
+                            <p class="text-gray-600">Experimente todas as funcionalidades sem compromisso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-check text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">100% Responsivo</h3>
+                            <p class="text-gray-600">Acesse de qualquer dispositivo: celular, tablet ou computador</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-check text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">Suporte Especializado</h3>
+                            <p class="text-gray-600">Nossa equipe está pronta para ajudar você a crescer</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-check text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">Segurança Total</h3>
+                            <p class="text-gray-600">Seus dados protegidos com a mais alta tecnologia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative">
+                <div class="bg-white rounded-xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto mb-6 flex items-center justify-center">
+                            <i class="bi bi-trophy text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+                            Já são mais de 1.000+ empresas
+                        </h3>
+                        <p class="text-gray-600">
+                            confiando no Financeiro Inteligente para gerenciar suas finanças
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="py-20 bg-gradient-to-r from-primary to-secondary">
+    <div class="max-w-4xl mx-auto text-center px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            Pronto para transformar suas finanças?
+        </h2>
+        <p class="text-xl text-white opacity-90 mb-8">
+            Comece hoje mesmo com 7 dias grátis e veja a diferença!
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="bg-white text-primary px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors">
+            Começar Agora - É Grátis!
+        </a>
+    </div>
+</div>
+{% endblock %}

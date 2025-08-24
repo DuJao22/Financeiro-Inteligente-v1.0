@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações - Financeiro Inteligente{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-900">Configurações</h1>
+        <div class="flex items-center space-x-2">
+            {% if current_user.subscription_status == 'active' %}
+                <span class="px-3 py-1 bg-success bg-opacity-10 text-success rounded-full text-sm font-medium">
+                    <i class="bi bi-check-circle mr-1"></i>
+                    {{ current_user.get_plan_features().name }}
+                </span>
+            {% elif current_user.subscription_status == 'trial' %}
+                <span class="px-3 py-1 bg-warning bg-opacity-10 text-warning rounded-full text-sm font-medium">
+                    <i class="bi bi-clock mr-1"></i>
+                    Período de Teste
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-6">
+        <!-- Settings Navigation -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-lg">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="font-semibold text-gray-900">Menu</h3>
+                </div>
+                <nav class="p-2">
+                    <a href="#profile" onclick="showSection('profile')" class="settings-nav-item active flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="bi bi-person mr-3"></i>Perfil
+                    </a>
+                    <a href="#subscription" onclick="showSection('subscription')" class="settings-nav-item flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="bi bi-credit-card mr-3"></i>Assinatura
+                    </a>
+                    <a href="#notifications" onclick="showSection('notifications')" class="settings-nav-item flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="bi bi-bell mr-3"></i>Notificações
+                    </a>
+                    <a href="#security" onclick="showSection('security')" class="settings-nav-item flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="bi bi-shield-check mr-3"></i>Segurança
+                    </a>
+                    <a href="#integrations" onclick="showSection('integrations')" class="settings-nav-item flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100">
+                        <i class="bi bi-plug mr-3"></i>Integrações
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="lg:col-span-3">
+            <!-- Profile Section -->
+            <div id="profile-section" class="settings-section">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Informações do Perfil</h3>
+                    
+                    <form>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                                <input type="text" value="{{ current_user.full_name }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" value="{{ current_user.email }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                                <input type="tel" value="{{ current_user.phone or '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                                <input type="text" placeholder="Nome da sua empresa" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex justify-end">
+                            <button type="button" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors">
+                                Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Avatar Section -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Foto do Perfil</h3>
+                    
+                    <div class="flex items-center space-x-6">
+                        <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                            <span class="text-white text-2xl font-bold">{{ current_user.full_name[0] }}</span>
+                        </div>
+                        <div>
+                            <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors mr-3">
+                                Alterar Foto
+                            </button>
+                            <button class="text-red-600 hover:text-red-700">Remover</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Section -->
+            <div id="subscription-section" class="settings-section hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Gerenciar Assinatura</h3>
+                    
+                    <!-- Current Plan -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-medium text-gray-900">Plano Atual</h4>
+                                <p class="text-sm text-gray-600">{{ current_user.get_plan_features().name }}</p>
+                                {% if current_user.subscription_status == 'trial' %}
+                                    {% set days_left = ((current_user.trial_end_date.replace(tzinfo=None) - datetime.utcnow()).days) %}
+                                    <p class="text-sm text-warning">
+                                        {% if days_left > 0 %}
+                                            {{ days_left }} dias restantes no teste
+                                        {% else %}
+                                            Teste expirado
+                                        {% endif %}
+                                    </p>
+                                {% elif current_user.subscription_end_date %}
+                                    <p class="text-sm text-gray-600">
+                                        Próxima cobrança: {{ current_user.subscription_end_date.strftime('%d/%m/%Y') }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="text-right">
+                                {% if current_user.subscription_status == 'trial' %}
+                                    <span class="text-lg font-bold text-warning">Grátis</span>
+                                {% else %}
+                                    <span class="text-lg font-bold text-gray-900">
+                                        R$ {{ {'mei': '49', 'professional': '99', 'enterprise': '199'}[current_user.subscription_plan] or '0' }}/mês
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Plan Actions -->
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <a href="{{ url_for('subscription.plans') }}" class="bg-primary text-white px-4 py-3 rounded-lg font-medium text-center hover:bg-primary-dark transition-colors">
+                            <i class="bi bi-arrow-up-circle mr-2"></i>Fazer Upgrade
+                        </a>
+                        {% if current_user.subscription_status == 'active' %}
+                            <a href="{{ url_for('subscription.cancel_subscription') }}" class="bg-red-100 text-red-700 px-4 py-3 rounded-lg font-medium text-center hover:bg-red-200 transition-colors">
+                                <i class="bi bi-x-circle mr-2"></i>Cancelar Assinatura
+                            </a>
+                        {% else %}
+                            <button disabled class="bg-gray-100 text-gray-400 px-4 py-3 rounded-lg font-medium cursor-not-allowed">
+                                <i class="bi bi-x-circle mr-2"></i>Cancelar Assinatura
+                            </button>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Billing History -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Histórico de Pagamentos</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium">{{ current_user.get_plan_features().name }}</p>
+                                    <p class="text-sm text-gray-600">{{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-medium text-success">R$ 0,00</p>
+                                    <p class="text-sm text-gray-600">Período de teste</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div id="notifications-section" class="settings-section hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Preferências de Notificação</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Email Notifications -->
+                        <div>
+                            <h4 class="font-medium text-gray-900 mb-3">Notificações por Email</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Contas próximas do vencimento</p>
+                                        <p class="text-sm text-gray-600">Receba alertas 3 dias antes do vencimento</p>
+                                    </div>
+                                    <input type="checkbox" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Relatório mensal</p>
+                                        <p class="text-sm text-gray-600">Resumo financeiro no início de cada mês</p>
+                                    </div>
+                                    <input type="checkbox" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Atualizações do sistema</p>
+                                        <p class="text-sm text-gray-600">Novas funcionalidades e melhorias</p>
+                                    </div>
+                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- WhatsApp Notifications -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <h4 class="font-medium text-gray-900 mb-3">Notificações via WhatsApp</h4>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                <div class="flex items-center">
+                                    <i class="bi bi-info-circle text-blue-600 mr-2"></i>
+                                    <span class="text-sm text-blue-700">Funcionalidade disponível em breve</span>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between opacity-50">
+                                    <div>
+                                        <p class="font-medium">Alertas urgentes</p>
+                                        <p class="text-sm text-gray-600">Contas em atraso e alertas críticos</p>
+                                    </div>
+                                    <input type="checkbox" disabled class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors">
+                            Salvar Preferências
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div id="security-section" class="settings-section hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Segurança da Conta</h3>
+                    
+                    <!-- Change Password -->
+                    <div class="mb-8">
+                        <h4 class="font-medium text-gray-900 mb-4">Alterar Senha</h4>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Senha Atual</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nova Senha</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Nova Senha</label>
+                                <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            </div>
+                            <button type="button" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors">
+                                Alterar Senha
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Two-Factor Authentication -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Autenticação de Dois Fatores</h4>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="bi bi-exclamation-triangle text-yellow-600 mr-2"></i>
+                                <span class="text-sm text-yellow-700">Funcionalidade em desenvolvimento</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Adicione uma camada extra de segurança à sua conta com autenticação de dois fatores.
+                        </p>
+                        <button disabled class="bg-gray-100 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed">
+                            Configurar 2FA
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Active Sessions -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Sessões Ativas</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-display text-green-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Sessão Atual</p>
+                                    <p class="text-sm text-gray-600">Desktop • Último acesso: agora</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Ativo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations Section -->
+            <div id="integrations-section" class="settings-section hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-6">Integrações</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Mercado Pago Integration -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="bi bi-credit-card text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Mercado Pago</h4>
+                                        <p class="text-sm text-gray-600">Emita boletos e receba via PIX automaticamente</p>
+                                    </div>
+                                </div>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                    Conectar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Contador Access -->
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="bi bi-person-badge text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Acesso do Contador</h4>
+                                        <p class="text-sm text-gray-600">Permita que seu contador acesse os relatórios</p>
+                                    </div>
+                                </div>
+                                <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors">
+                                    Configurar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Bank Integration -->
+                        <div class="border border-gray-200 rounded-lg p-4 opacity-60">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="bi bi-bank text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">Integração Bancária</h4>
+                                        <p class="text-sm text-gray-600">Sincronize automaticamente com seu banco</p>
+                                    </div>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">Em breve</span>
+                            </div>
+                        </div>
+                        
+                        <!-- OCR Integration -->
+                        <div class="border border-gray-200 rounded-lg p-4 opacity-60">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                        <i class="bi bi-camera text-red-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">OCR Inteligente</h4>
+                                        <p class="text-sm text-gray-600">Escaneie recibos e notas automaticamente</p>
+                                    </div>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">Em breve</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSection(sectionName) {
+    // Hide all sections
+    const sections = document.querySelectorAll('.settings-section');
+    sections.forEach(section => section.classList.add('hidden'));
+    
+    // Show selected section
+    const selectedSection = document.getElementById(sectionName + '-section');
+    if (selectedSection) {
+        selectedSection.classList.remove('hidden');
+    }
+    
+    // Update navigation
+    const navItems = document.querySelectorAll('.settings-nav-item');
+    navItems.forEach(item => {
+        item.classList.remove('active', 'bg-primary', 'text-white');
+        item.classList.add('text-gray-700');
+    });
+    
+    // Highlight active nav item
+    const activeNav = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+    if (activeNav) {
+        activeNav.classList.add('active', 'bg-primary', 'text-white');
+        activeNav.classList.remove('text-gray-700');
+    }
+}
+
+// Initialize with profile section
+document.addEventListener('DOMContentLoaded', function() {
+    showSection('profile');
+});
+</script>
+{% endblock %}

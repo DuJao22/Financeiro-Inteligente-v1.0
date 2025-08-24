@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Planos e Preços - Financeiro Inteligente{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Escolha o melhor plano para você</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Transforme sua gestão financeira com as ferramentas certas para o seu negócio
+        </p>
+        {% if message %}
+        <div class="mt-4 p-4 bg-warning bg-opacity-10 border border-warning text-warning rounded-lg max-w-2xl mx-auto">
+            {{ message }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Trial Banner -->
+    {% if current_user.is_authenticated and current_user.subscription_status == 'trial' %}
+    <div class="bg-gradient-to-r from-primary to-secondary rounded-xl p-6 text-white text-center">
+        <h3 class="text-xl font-semibold mb-2">🎉 Você está no período de teste grátis!</h3>
+        <p class="opacity-90">
+            {% set days_left = ((current_user.trial_end_date.replace(tzinfo=None) - datetime.utcnow()).days) %}
+            {% if days_left > 0 %}
+                Restam {{ days_left }} dias para escolher seu plano
+            {% else %}
+                Seu teste expirou - escolha um plano para continuar
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Plans Grid -->
+    <div class="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- MEI Plan -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden">
+            <div class="p-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="bi bi-person text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Plano MEI</h3>
+                    <p class="text-gray-600 mt-2">Perfeito para Microempreendedores Individuais</p>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="flex items-center justify-center">
+                        <span class="text-4xl font-bold text-gray-900">R$ 49</span>
+                        <span class="text-gray-500 ml-2">/mês</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Primeiro mês grátis</p>
+                </div>
+                
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-green-500 mr-3"></i>
+                        <span class="text-gray-700">Até 100 transações/mês</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-green-500 mr-3"></i>
+                        <span class="text-gray-700">Relatórios básicos</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-green-500 mr-3"></i>
+                        <span class="text-gray-700">Controle de caixa</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-green-500 mr-3"></i>
+                        <span class="text-gray-700">Contas a pagar/receber</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-green-500 mr-3"></i>
+                        <span class="text-gray-700">Suporte por email</span>
+                    </li>
+                </ul>
+                
+                <a href="{{ url_for('subscription.checkout', plan_id='mei') }}" 
+                   class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors text-center block">
+                    Escolher Plano MEI
+                </a>
+            </div>
+        </div>
+
+        <!-- Professional Plan (Popular) -->
+        <div class="bg-white rounded-2xl shadow-xl border-2 border-primary relative overflow-hidden transform scale-105">
+            <!-- Popular Badge -->
+            <div class="absolute top-0 left-0 right-0 bg-primary text-white text-center py-2 font-semibold">
+                🔥 MAIS POPULAR
+            </div>
+            
+            <div class="p-8 pt-12">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="bi bi-briefcase text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Plano Profissional</h3>
+                    <p class="text-gray-600 mt-2">Para pequenos negócios em crescimento</p>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="flex items-center justify-center">
+                        <span class="text-4xl font-bold text-primary">R$ 99</span>
+                        <span class="text-gray-500 ml-2">/mês</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">7 dias grátis</p>
+                </div>
+                
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Até 500 transações/mês</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Relatórios avançados</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Automações inteligentes</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Integração Mercado Pago</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Análise de impostos</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-primary mr-3"></i>
+                        <span class="text-gray-700">Suporte prioritário</span>
+                    </li>
+                </ul>
+                
+                <a href="{{ url_for('subscription.checkout', plan_id='professional') }}" 
+                   class="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-dark transition-colors text-center block">
+                    Escolher Plano Profissional
+                </a>
+            </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden">
+            <div class="p-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="bi bi-building text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Plano Empresarial</h3>
+                    <p class="text-gray-600 mt-2">Para empresas que precisam de mais</p>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="flex items-center justify-center">
+                        <span class="text-4xl font-bold text-gray-900">R$ 199</span>
+                        <span class="text-gray-500 ml-2">/mês</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Recursos ilimitados</p>
+                </div>
+                
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">Transações ilimitadas</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">Multiusuário</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">Acesso para contador</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">Relatórios personalizados</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">API completa</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-check-circle text-purple-500 mr-3"></i>
+                        <span class="text-gray-700">Suporte 24/7</span>
+                    </li>
+                </ul>
+                
+                <a href="{{ url_for('subscription.checkout', plan_id='enterprise') }}" 
+                   class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-center block">
+                    Escolher Plano Empresarial
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Comparison -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-6xl mx-auto">
+        <div class="bg-gray-50 px-6 py-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">Comparação Detalhada</h3>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            Recursos
+                        </th>
+                        <th class="px-6 py-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            MEI
+                        </th>
+                        <th class="px-6 py-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            Profissional
+                        </th>
+                        <th class="px-6 py-4 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            Empresarial
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            Transações por mês
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            100
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            500
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-infinity text-purple-500"></i> Ilimitadas
+                        </td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            Relatórios avançados
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            Automações
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            Multiusuário
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            Acesso para contador
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-x text-red-500"></i>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <i class="bi bi-check text-green-500"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Perguntas Frequentes</h3>
+        
+        <div class="space-y-6">
+            <div class="border-b border-gray-200 pb-4">
+                <h4 class="font-semibold text-gray-900 mb-2">Posso cancelar a qualquer momento?</h4>
+                <p class="text-gray-600">Sim! Você pode cancelar sua assinatura a qualquer momento sem multas ou taxas de cancelamento.</p>
+            </div>
+            
+            <div class="border-b border-gray-200 pb-4">
+                <h4 class="font-semibold text-gray-900 mb-2">Como funciona o período de teste?</h4>
+                <p class="text-gray-600">Você tem 7 dias para testar todas as funcionalidades gratuitamente. Não cobramos cartão de crédito durante o teste.</p>
+            </div>
+            
+            <div class="border-b border-gray-200 pb-4">
+                <h4 class="font-semibold text-gray-900 mb-2">Posso mudar de plano depois?</h4>
+                <p class="text-gray-600">Claro! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento através das configurações.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-gray-900 mb-2">Os dados ficam seguros?</h4>
+                <p class="text-gray-600">Sim! Utilizamos criptografia de ponta e seguimos as melhores práticas de segurança para proteger seus dados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gradient-to-r from-primary to-secondary rounded-xl p-8 text-white text-center">
+        <h3 class="text-2xl font-bold mb-4">Ainda tem dúvidas?</h3>
+        <p class="text-lg opacity-90 mb-6">Nossa equipe está pronta para ajudar você a escolher o melhor plano</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                <i class="bi bi-chat-dots mr-2"></i>Falar com Especialista
+            </a>
+            <a href="#" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors">
+                <i class="bi bi-calendar mr-2"></i>Agendar Demo
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

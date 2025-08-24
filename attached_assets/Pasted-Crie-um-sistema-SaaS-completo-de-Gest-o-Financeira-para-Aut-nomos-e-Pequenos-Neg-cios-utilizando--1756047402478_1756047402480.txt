@@ -1,0 +1,86 @@
+Crie um sistema SaaS completo de Gestão Financeira para Autônomos e Pequenos Negócios, utilizando:
+
+Python (Flask) para o backend
+
+SQLite3 para o banco de dados
+
+HTML5, CSS3 (TailwindCSS) e JavaScript no frontend
+
+Jinja2 para renderização de templates
+
+O sistema deve conter todas as funcionalidades:
+
+Autenticação de usuários (cadastro, login, recuperação de senha).
+
+Teste grátis de 7 dias para novos usuários (após isso, bloqueia funções até assinar).
+
+Checkout integrado com Mercado Pago para assinatura mensal/recorrente.
+
+Dashboard inteligente com gráficos (entradas, saídas, saldo).
+
+Controle de caixa (entradas, saídas, saldo atual, previsão).
+
+Emissão de boletos e Pix automáticos via Mercado Pago.
+
+Emissão de Notas Fiscais (NFSe/NFe integrável futuramente).
+
+Gestão de impostos (cálculo automático do DAS para MEI e Simples Nacional).
+
+Contas a pagar e receber, com alertas por e-mail/WhatsApp.
+
+Relatórios inteligentes (lucro líquido, ticket médio, inadimplência, exportação PDF/Excel).
+
+OCR com IA para lançamento automático → usuário tira foto de recibo e sistema lança.
+
+Chatbot financeiro com IA → responde perguntas como “quanto posso gastar esse mês?”.
+
+Área exclusiva para contador (o usuário libera acesso e o contador enxerga relatórios).
+
+Aplicativo mobile (versão web responsiva PWA).
+
+Layout e UX
+
+Sistema 100% responsivo (desktop, tablet, mobile).
+
+Design moderno, profissional e 3D com cores diferenciadas.
+
+Páginas: Login, Cadastro, Dashboard, Financeiro, Relatórios, Configurações, Checkout.
+
+Página especial de compra/assinatura → checkout Mercado Pago embutido.
+
+Tela de boas-vindas explicando benefícios.
+
+Gamificação: ícones, badges e progress bar para engajar usuário.
+
+Modelo de Negócio
+
+Plano MEI: R$49/mês → básico.
+
+Plano Profissional: R$99/mês → relatórios e automações.
+
+Plano Empresarial: R$199/mês → multiusuário, contador, relatórios avançados.
+
+7 dias de teste grátis em qualquer plano.
+
+Créditos
+
+Todo o sistema deve conter no rodapé e sobre a logo a frase:
+“Desenvolvido por João Layon – Todos os Direitos Reservados”.
+
+O nome do sistema será exibido como: “Financeiro Inteligente by João Layon”.
+
+Requisitos técnicos adicionais
+
+Implementar JWT ou Flask-Login para autenticação.
+
+Criar API REST para integração com outros sistemas.
+
+Usar Chart.js ou Recharts para gráficos.
+
+Estruturar templates com Jinja2.
+
+Usar Flask-Migrate para versionamento do banco.
+
+Configurar Mercado Pago Checkout Transparente (assinatura recorrente).
+
+Implementar envio automático de e-mails (Flask-Mail).

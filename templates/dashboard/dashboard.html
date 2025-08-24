@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Financeiro Inteligente{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Welcome Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary rounded-xl p-4 sm:p-6 text-white">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold">Olá, {{ current_user.full_name }}! 👋</h1>
+                <p class="opacity-90 text-sm sm:text-base">Bem-vindo ao seu painel financeiro</p>
+            </div>
+            <div class="sm:text-right">
+                <div class="text-sm opacity-75">Nível {{ user_level }}</div>
+                <div class="w-full sm:w-32 h-2 bg-white bg-opacity-30 rounded-full mt-1">
+                    <div class="h-full bg-white rounded-full transition-all duration-500" style="width: {{ level_progress }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Overview Cards -->
+    <div class="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
+        <!-- Monthly Income -->
+        <div class="stat-card bg-white rounded-xl shadow-lg p-4 sm:p-6 border-l-4 border-success hover:shadow-xl transition-shadow">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-600 truncate">Receitas do Mês</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-success currency">R$ {{ "%.2f"|format(monthly_income|float) }}</p>
+                    <p class="text-xs text-gray-500">{{ current_month }}</p>
+                </div>
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0 ml-4">
+                    <i class="bi bi-arrow-up text-success text-lg sm:text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Expenses -->
+        <div class="stat-card bg-white rounded-xl shadow-lg p-4 sm:p-6 border-l-4 border-danger hover:shadow-xl transition-shadow">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-600 truncate">Despesas do Mês</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-danger currency">R$ {{ "%.2f"|format(monthly_expenses|float) }}</p>
+                    <p class="text-xs text-gray-500">{{ current_month }}</p>
+                </div>
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-danger bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0 ml-4">
+                    <i class="bi bi-arrow-down text-danger text-lg sm:text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Balance -->
+        <div class="stat-card bg-white rounded-xl shadow-lg p-4 sm:p-6 border-l-4 border-{{ 'success' if monthly_balance >= 0 else 'danger' }} hover:shadow-xl transition-shadow">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-600 truncate">Saldo do Mês</p>
+                    <p class="stat-value text-xl sm:text-2xl font-bold text-{{ 'success' if monthly_balance >= 0 else 'danger' }} currency">
+                        R$ {{ "%.2f"|format(monthly_balance|float) }}
+                    </p>
+                    <p class="text-xs text-gray-500">{{ current_month }}</p>
+                </div>
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-{{ 'success' if monthly_balance >= 0 else 'danger' }} bg-opacity-10 rounded-full flex items-center justify-center flex-shrink-0 ml-4">
+                    <i class="bi bi-{{ 'trending-up' if monthly_balance >= 0 else 'trending-down' }} text-{{ 'success' if monthly_balance >= 0 else 'danger' }} text-lg sm:text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Accounts Row -->
+    <div class="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+        <!-- Financial Chart -->
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 order-2 lg:order-1">
+            <h3 class="text-lg font-semibold mb-4">Evolução Financeira</h3>
+            <div class="h-48 sm:h-64 chart-container">
+                <canvas id="financialChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Accounts Summary -->
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 order-1 lg:order-2">
+            <h3 class="text-lg font-semibold mb-4">Contas</h3>
+            <div class="space-y-3 sm:space-y-4">
+                <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                            <i class="bi bi-arrow-down-left text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Contas a Receber</p>
+                            <p class="text-sm text-gray-500">Pendentes</p>
+                        </div>
+                    </div>
+                    <p class="font-bold text-success">R$ {{ "%.2f"|format(pending_receivables|float) }}</p>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-danger rounded-full flex items-center justify-center">
+                            <i class="bi bi-arrow-up-right text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Contas a Pagar</p>
+                            <p class="text-sm text-gray-500">Pendentes</p>
+                        </div>
+                    </div>
+                    <p class="font-bold text-danger">R$ {{ "%.2f"|format(pending_payables|float) }}</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t">
+                <a href="{{ url_for('financial.accounts') }}" class="text-primary hover:text-primary-dark font-medium">
+                    Ver todas as contas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions and Goals -->
+    <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Recent Transactions -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Transações Recentes</h3>
+                <a href="{{ url_for('financial.cash_flow') }}" class="text-primary hover:text-primary-dark text-sm">
+                    Ver todas
+                </a>
+            </div>
+            
+            {% if recent_transactions %}
+                <div class="space-y-3">
+                    {% for transaction in recent_transactions %}
+                    <div class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-{{ 'success' if transaction.transaction_type == 'income' else 'danger' }} bg-opacity-10 rounded-full flex items-center justify-center">
+                                <i class="bi bi-{{ 'arrow-up' if transaction.transaction_type == 'income' else 'arrow-down' }} text-{{ 'success' if transaction.transaction_type == 'income' else 'danger' }}"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">{{ transaction.description }}</p>
+                                <p class="text-sm text-gray-500">{{ utc_to_brasilia(transaction.date).strftime('%d/%m/%Y') if transaction.date else '-' }}</p>
+                            </div>
+                        </div>
+                        <p class="font-bold text-{{ 'success' if transaction.transaction_type == 'income' else 'danger' }}">
+                            {{ '+' if transaction.transaction_type == 'income' else '-' }}R$ {{ "%.2f"|format(transaction.amount|float) }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <i class="bi bi-inbox text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Nenhuma transação encontrada</p>
+                    <a href="{{ url_for('financial.cash_flow') }}" class="text-primary hover:text-primary-dark mt-2 inline-block">
+                        Adicionar primeira transação
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Financial Goals -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Metas Financeiras</h3>
+                <button class="text-primary hover:text-primary-dark text-sm">
+                    Adicionar meta
+                </button>
+            </div>
+            
+            {% if goals %}
+                <div class="space-y-4">
+                    {% for goal in goals %}
+                    <div class="border rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-medium">{{ goal.title }}</h4>
+                            <span class="text-sm text-gray-500">{{ "%.0f"|format(goal.get_progress_percentage()) }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: {{ goal.get_progress_percentage() }}%"></div>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 mt-1">
+                            <span>R$ {{ "%.2f"|format(goal.current_amount|float) }}</span>
+                            <span>R$ {{ "%.2f"|format(goal.target_amount|float) }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <i class="bi bi-target text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Nenhuma meta definida</p>
+                    <button class="text-primary hover:text-primary-dark mt-2 inline-block">
+                        Criar primeira meta
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
