@@ -6,3 +6,4 @@ SQLAlchemy
 Werkzeug
 psycopg2-binary
 gunicorn
+pytz
